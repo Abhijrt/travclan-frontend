@@ -47,7 +47,6 @@ function Customer(props) {
 
     const useStyles = makeStyles({
         table: {
-          minWidth: 700,
           width: "50%",
           margin: 'auto'
         },
@@ -63,6 +62,11 @@ function Customer(props) {
         },
         link: {
             textDecoration: 'none'
+        },
+        name: {
+            position: 'relative',
+            top: -15,
+            paddingLeft: 10
         }
     });
 
@@ -92,7 +96,7 @@ function Customer(props) {
                         <StyledTableCell align="right">Email</StyledTableCell>
                         <StyledTableCell align="right">Phone</StyledTableCell>
                         <StyledTableCell align="right">Premium</StyledTableCell>
-                        <StyledTableCell align="right">Max/Min Bid</StyledTableCell>
+                        <StyledTableCell align="right">{ state.checkedB ? "Min" : "Max"} Bid</StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -101,9 +105,11 @@ function Customer(props) {
                         <Link className={classes.link} to={"/customer-detail/" + customer.id}>
                             <StyledTableCell component="th" scope="row" >
                                 <Avatar className={classes.img} alt={customer.firsname} src={customer.avatarUrl} />
-                                {customer.firstname}
-                                &nbsp;
-                                {customer.lastname}
+                                <span className={classes.name}>
+                                    {customer.firstname}
+                                    &nbsp;
+                                    {customer.lastname}
+                                </span>
                             </StyledTableCell>
                         </Link>
                         <StyledTableCell align="right">{customer.email}</StyledTableCell>
