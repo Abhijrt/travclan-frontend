@@ -4,6 +4,7 @@ import { Card, CardHeader, CardMedia, Avatar } from '@material-ui/core';
 import KeyboardBackspaceSharp from '@material-ui/icons/KeyboardBackspaceSharp';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Loading from './Loading';
 
 function CustomerDetail(props) {
 
@@ -92,7 +93,7 @@ function CustomerDetail(props) {
     const classes = useStyles();
 
     if(customerDetail.length === 0) {
-        return <div></div>;
+        return <Loading/>;
     }
     return (
         <div>

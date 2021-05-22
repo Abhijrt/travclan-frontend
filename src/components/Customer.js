@@ -1,19 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar } from '@material-ui/core';
 import { FormGroup, FormControlLabel, Switch } from '@material-ui/core';
-
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Loading from './Loading';
 
 function Customer(props) {
 
+    const { customerData } = props;
+
     const [state, setState] = useState({
         checkedB: false,
+        increasing: true,
+        decreasing: false
     });
+
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    const handleSort = (event) => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+    }
 
     const getMinBid = (bids) => {
         return bids.reduce((acc, cur) => {
@@ -25,6 +34,22 @@ function Customer(props) {
         return bids.reduce((acc, cur) => {
             return acc.amount < cur.amount ? cur : acc;
         },{ amount: 0 });
+    }
+
+    const sortCustomerByBidAmountIncreasing = (customerData) => {
+        return customerData.sort(function(a,b){
+            let bid1 = getMaxBid(a.bids);
+            let bid2 = getMaxBid(b.bids);
+            return  bid1.amount - bid2.amount;
+        })
+    }
+
+    const sortCustomerByBidAmountDecreasing = (customerData) => {
+        return customerData.sort(function(a,b){
+            let bid1 = getMinBid(a.bids);
+            let bid2 = getMinBid(b.bids);
+            return  bid1.amount - bid2.amount;
+        })
     }
 
     const StyledTableCell = withStyles((theme) => ({
@@ -56,7 +81,14 @@ function Customer(props) {
         toggleBtn: {
             padding: 20,
             alignItems: 'center',
-            width: '33%',
+            width: '36%',
+            margin: 'auto',
+            float: 'right'
+        },
+        toggleBtn1: {
+            padding: 20,
+            alignItems: 'center',
+            width: '35%',
             margin: 'auto',
             float: 'right'
         },
@@ -71,18 +103,40 @@ function Customer(props) {
     });
 
     const classes = useStyles();
-    const { customerData } = props;
+
+    if(customerData.length === 0) {
+        return <Loading/>
+    }
+
+    if(state.increasing) {
+        sortCustomerByBidAmountDecreasing(customerData);
+    }else{
+        sortCustomerByBidAmountIncreasing(customerData);
+    }
 
     return (
       <div>
         <FormGroup row className={classes.toggleBtn}>
-            Sort by Bid &nbsp;
+            Show Min/Max bid &nbsp;
             <FormControlLabel
                 control={
                 <Switch
                     checked={state.checkedB}
                     onChange={handleChange}
                     name="checkedB"
+                    color="primary"
+                />
+                }
+            />
+        </FormGroup>
+        <FormGroup row className={classes.toggleBtn1}>
+            Sort by Bid &nbsp;
+            <FormControlLabel
+                control={
+                <Switch
+                    checked={state.increasing}
+                    onChange={handleSort}
+                    name="increasing"
                     color="primary"
                 />
                 }
