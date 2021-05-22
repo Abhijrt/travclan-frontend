@@ -7,14 +7,24 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 function Customer(props) {
 
     const [state, setState] = useState({
-        checkedA: true,
-        checkedB: true,
+        checkedB: false,
     });
 
-    
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
     };
+
+    const getMinBid = (bids) => {
+        return bids.reduce((acc, cur) => {
+            return acc.amount > cur.amount ? cur : acc;
+        },{ amount: 100000000000 });
+    }
+
+    const getMaxBid = (bids) => {
+        return bids.reduce((acc, cur) => {
+            return acc.amount < cur.amount ? cur : acc;
+        },{ amount: 0 });
+    }
 
     const StyledTableCell = withStyles((theme) => ({
         head: {
@@ -55,19 +65,21 @@ function Customer(props) {
     const classes = useStyles();
     const { customerData } = props;
     console.log(customerData);
+    console.log(state.checkedB);
     return (
       <div>
         <FormGroup row className={classes.toggleBtn}>
             Sort by Bid &nbsp;
             <FormControlLabel
                 control={
-                    <Switch
-                        checked={state.checkedB}
-                        onChange={handleChange}
-                        name="checkedB"
-                        color="primary"
-                    />
-                }/>
+                <Switch
+                    checked={state.checkedB}
+                    onChange={handleChange}
+                    name="checkedB"
+                    color="primary"
+                />
+                }
+            />
         </FormGroup>
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="customized table">
@@ -92,7 +104,7 @@ function Customer(props) {
                         <StyledTableCell align="right">{customer.email}</StyledTableCell>
                         <StyledTableCell align="right">{customer.phone}</StyledTableCell>
                         <StyledTableCell align="right">{customer.hasPremium ? "True" : "False"}</StyledTableCell>
-                        <StyledTableCell align="right">{}</StyledTableCell>
+                        <StyledTableCell align="right">{state.checkedB ? getMinBid(customer.bids).amount : getMaxBid(customer.bids).amount}</StyledTableCell>
                     </StyledTableRow>
                 ))}
                 </TableBody>
@@ -103,3 +115,46 @@ function Customer(props) {
 }
   
 export default Customer;
+
+
+
+
+
+// import React from 'react';
+// import FormGroup from '@material-ui/core/FormGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Switch from '@material-ui/core/Switch';
+
+// export default function SwitchLabels() {
+//   const [state, setState] = React.useState({
+//     checkedA: true,
+//     checkedB: true,
+//   });
+
+//   const handleChange = (event) => {
+//     setState({ ...state, [event.target.name]: event.target.checked });
+//   };
+
+//   return (
+//     <FormGroup row>
+//       <FormControlLabel
+//         control={<Switch checked={state.checkedA} onChange={handleChange} name="checkedA" />}
+//         label="Secondary"
+//       />
+//       <FormControlLabel
+//         control={
+//           <Switch
+//             checked={state.checkedB}
+//             onChange={handleChange}
+//             name="checkedB"
+//             color="primary"
+//           />
+//         }
+//         label="Primary"
+//       />
+//       <FormControlLabel control={<Switch />} label="Uncontrolled" />
+//       <FormControlLabel disabled control={<Switch />} label="Disabled" />
+//       <FormControlLabel disabled control={<Switch checked />} label="Disabled" />
+//     </FormGroup>
+//   );
+// }
