@@ -68,8 +68,7 @@ function Customer(props) {
 
     const classes = useStyles();
     const { customerData } = props;
-    console.log(customerData);
-    console.log(state.checkedB);
+
     return (
       <div>
         <FormGroup row className={classes.toggleBtn}>
