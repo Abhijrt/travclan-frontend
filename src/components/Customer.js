@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Avatar } from '@material-ui/core';
 import { FormGroup, FormControlLabel, Switch } from '@material-ui/core';
 
@@ -59,6 +60,9 @@ function Customer(props) {
             width: '33%',
             margin: 'auto',
             float: 'right'
+        },
+        link: {
+            textDecoration: 'none'
         }
     });
 
@@ -95,12 +99,14 @@ function Customer(props) {
                 <TableBody>
                 {customerData.map((customer) => (
                     <StyledTableRow key={customer.id} >
-                        <StyledTableCell component="th" scope="row" >
-                            <Avatar className={classes.img} alt={customer.firsname} src={customer.avatarUrl} />
-                            {customer.firstname}
-                            &nbsp;
-                            {customer.lastname}
-                        </StyledTableCell>
+                        <Link className={classes.link} to={"/customer-detail/" + customer.id}>
+                            <StyledTableCell component="th" scope="row" >
+                                <Avatar className={classes.img} alt={customer.firsname} src={customer.avatarUrl} />
+                                {customer.firstname}
+                                &nbsp;
+                                {customer.lastname}
+                            </StyledTableCell>
+                        </Link>
                         <StyledTableCell align="right">{customer.email}</StyledTableCell>
                         <StyledTableCell align="right">{customer.phone}</StyledTableCell>
                         <StyledTableCell align="right">{customer.hasPremium ? "True" : "False"}</StyledTableCell>

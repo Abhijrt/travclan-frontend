@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Customer  from './Customer';
 import NavBar from './NavBar';
+import CustomerDetail from './CustomerDetail';
 
 function App() {
 
@@ -20,10 +22,17 @@ function App() {
   },[]);
 
   return (
-    <div>
+    <Router>
       <NavBar/>
-      <Customer customerData = {customerData}/>
-    </div>
+      <Switch>
+        <Route exact path="/" render={() => {
+                         return <div>
+                           <Customer customerData={customerData} /> 
+                         </div>}}
+        />
+        <Route exact path='/customer-detail/:customer_id' component={CustomerDetail} />
+      </Switch>
+    </Router>
   );
 }
 
