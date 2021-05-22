@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Customer  from './Customer';
+import NavBar from './NavBar';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
 
   return (
     <div>
+      <NavBar/>
       <Customer customerData = {customerData}/>
     </div>
   );
