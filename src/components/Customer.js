@@ -7,12 +7,12 @@ import Loading from './Loading';
 
 function Customer(props) {
 
-    const { customerData } = props;
+    let { customerData } = props;
 
     const [state, setState] = useState({
         checkedB: false,
-        increasing: true,
-        decreasing: false
+        increasing: false,
+        decreasing: true
     });
 
 
@@ -36,18 +36,10 @@ function Customer(props) {
         },{ amount: 0 });
     }
 
-    const sortCustomerByBidAmountIncreasing = (customerData) => {
+    const sortCustomerByBidAmountDecreasing = (customerData) => {
         return customerData.sort(function(a,b){
             let bid1 = getMaxBid(a.bids);
             let bid2 = getMaxBid(b.bids);
-            return  bid1.amount - bid2.amount;
-        })
-    }
-
-    const sortCustomerByBidAmountDecreasing = (customerData) => {
-        return customerData.sort(function(a,b){
-            let bid1 = getMinBid(a.bids);
-            let bid2 = getMinBid(b.bids);
             return  bid1.amount - bid2.amount;
         })
     }
@@ -111,7 +103,7 @@ function Customer(props) {
     if(state.increasing) {
         sortCustomerByBidAmountDecreasing(customerData);
     }else{
-        sortCustomerByBidAmountIncreasing(customerData);
+        customerData =  sortCustomerByBidAmountDecreasing(customerData).reverse();
     }
 
     return (
