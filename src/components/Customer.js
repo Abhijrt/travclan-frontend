@@ -4,17 +4,17 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { FormGroup, FormControlLabel, Switch } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Loading from './Loading';
+import ReactPaginate from 'react-paginate';
 
 function Customer(props) {
 
-    let { customerData } = props;
-
+    let  customerData  = props.customerData;
+    const [pageNumber, setPageNumber] = useState(0);
     const [state, setState] = useState({
         checkedB: false,
         increasing: false,
         decreasing: true
     });
-
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -63,6 +63,9 @@ function Customer(props) {
     }))(TableRow);
 
     const useStyles = makeStyles({
+        mainContainer: {
+            // maxWidth: '50%'
+        },
         table: {
           width: "50%",
           margin: 'auto'
@@ -106,8 +109,40 @@ function Customer(props) {
         customerData =  sortCustomerByBidAmountDecreasing(customerData).reverse();
     }
 
+   
+
+    const usersPerPage = 5;
+    const pagesVisited = pageNumber * usersPerPage;
+
+    const displayUsers = customerData.slice(pagesVisited, pagesVisited + usersPerPage).map(customer => {
+        return (
+            <StyledTableRow key={customer.id} >
+                <Link className={classes.link} to={"/customer-detail/" + customer.id}>
+                    <StyledTableCell component="th" scope="row" >
+                        <Avatar className={classes.img} alt={customer.firsname} src={customer.avatarUrl} />
+                        <span className={classes.name}>
+                            {customer.firstname}
+                            &nbsp;
+                            {customer.lastname}
+                        </span>
+                    </StyledTableCell>
+                </Link>
+                <StyledTableCell align="right">{customer.email}</StyledTableCell>
+                <StyledTableCell align="right">{customer.phone}</StyledTableCell>
+                <StyledTableCell align="right">{customer.hasPremium ? "True" : "False"}</StyledTableCell>
+                <StyledTableCell align="right">{state.checkedB ? getMinBid(customer.bids).amount : getMaxBid(customer.bids).amount}</StyledTableCell>
+            </StyledTableRow>
+        )
+    });
+    
+    const pageCount = Math.ceil(customerData.length / usersPerPage);
+
+    const changePage = ({ selected }) => {
+        setPageNumber(selected);
+    }
+
     return (
-      <div>
+      <div className={classes.mainContainer}>
         <FormGroup row className={classes.toggleBtn}>
             Show Min/Max bid &nbsp;
             <FormControlLabel
@@ -138,7 +173,7 @@ function Customer(props) {
             <Table className={classes.table} aria-label="customized table">
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Customer Name</StyledTableCell>
+                        <StyledTableCell >Customer Name</StyledTableCell>
                         <StyledTableCell align="right">Email</StyledTableCell>
                         <StyledTableCell align="right">Phone</StyledTableCell>
                         <StyledTableCell align="right">Premium</StyledTableCell>
@@ -146,24 +181,20 @@ function Customer(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {customerData.map((customer) => (
-                    <StyledTableRow key={customer.id} >
-                        <Link className={classes.link} to={"/customer-detail/" + customer.id}>
-                            <StyledTableCell component="th" scope="row" >
-                                <Avatar className={classes.img} alt={customer.firsname} src={customer.avatarUrl} />
-                                <span className={classes.name}>
-                                    {customer.firstname}
-                                    &nbsp;
-                                    {customer.lastname}
-                                </span>
-                            </StyledTableCell>
-                        </Link>
-                        <StyledTableCell align="right">{customer.email}</StyledTableCell>
-                        <StyledTableCell align="right">{customer.phone}</StyledTableCell>
-                        <StyledTableCell align="right">{customer.hasPremium ? "True" : "False"}</StyledTableCell>
-                        <StyledTableCell align="right">{state.checkedB ? getMinBid(customer.bids).amount : getMaxBid(customer.bids).amount}</StyledTableCell>
-                    </StyledTableRow>
-                ))}
+                    {displayUsers}
+                    {/* <div> */}
+                        <ReactPaginate
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        pageCount={pageCount}
+                        onPageChange={changePage}
+                        containerClassName={"paginationBttns"}
+                        previousLinkClassName={"previousBttn"}
+                        nextLinkClassName={"nextBttn"}
+                        disabledClassName={"paginationDisabled"}
+                        activeClassName={"paginationActive"}
+                        />
+                    {/* </div> */}
                 </TableBody>
             </Table>
         </TableContainer>
