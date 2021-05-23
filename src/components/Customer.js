@@ -63,9 +63,6 @@ function Customer(props) {
     }))(TableRow);
 
     const useStyles = makeStyles({
-        mainContainer: {
-            // maxWidth: '50%'
-        },
         table: {
           width: "50%",
           margin: 'auto'
@@ -109,8 +106,6 @@ function Customer(props) {
         customerData =  sortCustomerByBidAmountDecreasing(customerData).reverse();
     }
 
-   
-
     const usersPerPage = 5;
     const pagesVisited = pageNumber * usersPerPage;
 
@@ -142,7 +137,7 @@ function Customer(props) {
     }
 
     return (
-      <div className={classes.mainContainer}>
+      <div>
         <FormGroup row className={classes.toggleBtn}>
             Show Min/Max bid &nbsp;
             <FormControlLabel
@@ -182,8 +177,7 @@ function Customer(props) {
                 </TableHead>
                 <TableBody>
                     {displayUsers}
-                    {/* <div> */}
-                        <ReactPaginate
+                    <ReactPaginate
                         previousLabel={"Previous"}
                         nextLabel={"Next"}
                         pageCount={pageCount}
@@ -193,8 +187,7 @@ function Customer(props) {
                         nextLinkClassName={"nextBttn"}
                         disabledClassName={"paginationDisabled"}
                         activeClassName={"paginationActive"}
-                        />
-                    {/* </div> */}
+                    />
                 </TableBody>
             </Table>
         </TableContainer>
